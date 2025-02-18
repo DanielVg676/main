@@ -1,4 +1,5 @@
 import User from "../models/userModel.js";
+import { userCreatedEvent } from "../services/rabbitServices.js";
 
 //OBTENER UN REGISTRO DE LA BD A TRAVES DE UNA ID
 
@@ -54,6 +55,8 @@ export const createUsers = async (req, res) => {
         });
 
         console.log(newUser);
+        //Aqui se añade lo de nuestro servicio de rabbitServices.js para que se registre en la queue
+        await userCreatedEvent(newUser);
         return res.status(201).json({ message: 'Usuario creado', data: newUser });
 
     } catch (error) {
