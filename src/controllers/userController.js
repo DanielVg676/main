@@ -1,5 +1,6 @@
 import User from "../models/userModel.js";
 import { userCreatedEvent } from "../services/rabbitServices.js";
+import jwt from "jsonwebtoken";
 
 //OBTENER UN REGISTRO DE LA BD A TRAVES DE UNA ID
 
@@ -137,3 +138,39 @@ export const changeStateUser = async (req, res) => {
     }
 };
 
+
+export const login = async (req, res) => {
+    const { username, password } = req.body;
+
+    try {
+        if (!username || !password) {
+            return res.status(400).json({ mensaje: "Username y password son requeridos" });
+        }
+
+        // Buscar usuario en la BD
+        const user = await User.findOne({ where: { username } });
+
+        if (!user) {
+            return res.status(401).json({ mensaje: "Credenciales inválidas" });
+        }
+
+        // Comparar contraseñas (SIN ENCRIPTAR)
+        if (user.password !== password) {
+            return res.status(401).json({ mensaje: "Credenciales inválidas" });
+        }
+
+        const SECRET_KEY = process.env.SECRET_KEY || "utd1234";
+
+        // Generar JWT
+        const token = jwt.sign(
+            { id: user.id, username: user.username },
+            SECRET_KEY,
+            { expiresIn: "1h" }
+        );
+
+        return res.status(200).json({ mensaje: "Inicio de sesión exitoso", token });
+    } catch (error) {
+        console.error("Error al iniciar sesión:", error);
+        return res.status(500).json({ mensaje: "Error al iniciar sesión" });
+    }
+};

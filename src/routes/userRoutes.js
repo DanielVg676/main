@@ -1,5 +1,5 @@
 import express from "express";
-import {getUsers, createUsers, updateUser, deleteUser, changeStateUser} from "../controllers/userController.js";
+import {getUsers, createUsers, updateUser, deleteUser, changeStateUser, login} from "../controllers/userController.js";
 
 const router = express.Router();
 
@@ -8,6 +8,7 @@ router.post('/newuser', createUsers);
 router.patch('/update/:id', updateUser);
 router.delete('/delete/:id', deleteUser);
 router.patch('/deletedstatus/:id', changeStateUser);
+router.post('/login', login);
 
 /**
     * @swagger
