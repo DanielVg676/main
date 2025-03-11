@@ -159,7 +159,7 @@ export const login = async (req, res) => {
             return res.status(401).json({ mensaje: "Credenciales inválidas" });
         }
 
-        const SECRET_KEY = process.env.SECRET_KEY || "utd1234";
+        const SECRET_KEY = process.env.SECRET_KEY || "aJksd9QzPl+sVdK7vYc/L4dK8HgQmPpQ5K9yApUsj3w=";
 
         // Generar JWT
         const token = jwt.sign(
